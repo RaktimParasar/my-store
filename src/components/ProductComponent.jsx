@@ -12,10 +12,14 @@ const ProductComponent = () => {
 					<div className='ui link cards' onClick={() => history.push(`/product/${id}`)}>
 						<div className='ui card'>
 							<div className='image' style={{ background: 'none' }}>
-								<img style={{ padding: '1rem' }} src={image} alt={title} />
+								<img
+									style={{ padding: '1rem', height: '200px', maxWidth: '300px' }}
+									src={image}
+									alt={title}
+								/>
 							</div>
 							<div className='content'>
-								<div className='header'>{title}</div>
+								<div className='header'>{title.slice(0, 10)}</div>
 								<div className='meta price'>$ {price}</div>
 								<div className='meta'>{category}</div>
 							</div>

@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
-import { selectedProduct, removeSelectedProduct } from '../redux/actions/productActions';
+import { removeSelectedProduct, fetchProduct } from '../redux/actions/productActions';
 
 const ProductDetails = () => {
 	const product = useSelector((state) => state.product);
@@ -10,33 +9,43 @@ const ProductDetails = () => {
 	const { productId } = useParams();
 	const dispatch = useDispatch();
 
-	const fetchProductDetail = async () => {
-		const response = await axios
-			.get(`https://fakestoreapi.com/products/${productId}`)
-			.catch((err) => {
-				console.log('Message ', err);
-			});
-		dispatch(selectedProduct(response.data));
-	};
-
 	useEffect(() => {
-		if (productId && productId !== '') fetchProductDetail(productId);
+		if (productId && productId !== '') dispatch(fetchProduct(productId));
 		return () => {
 			dispatch(removeSelectedProduct());
 		};
-	}, [productId]);
+	}, [dispatch, productId]);
 
 	return (
-		<div className='ui grid container' style={{ marginTop: '2rem' }}>
+		<div className='container grid ui' style={{ marginTop: '2rem' }}>
 			{Object.keys(product).length === 0 ? (
-				<div>...Loading</div>
+				<div
+					style={{
+						display: 'flex',
+						justifyContent: 'center',
+						alignItems: 'center',
+						flexDirection: 'column',
+						width: '100%',
+						height: '90vh',
+					}}
+				>
+					<div className='inline ui active centered loader'></div>
+					<p>Loading</p>
+				</div>
 			) : (
 				<div className='ui placeholder segment'>
-					<div className='ui two column stackable center aligned grid'>
-						<div className='ui vertical divider'>!</div>
+					<div className='grid ui two column stackable center aligned'>
+						<div className='ui vertical divider'>
+							<i class='arrow right icon'></i>
+						</div>
 						<div className='middle aligned row'>
 							<div className='column lp'>
-								<img className='ui fluid image' src={image} alt='Product' />
+								<img
+									className='ui fluid image'
+									src={image}
+									alt='Product'
+									style={{ height: '500px', maxWidth: '500px' }}
+								/>
 							</div>
 							<div className='column rp'>
 								<h1>{title}</h1>
@@ -45,14 +54,8 @@ const ProductDetails = () => {
 										${price}
 									</a>
 								</h2>
-								<h3 className='ui brown block header'>{category}</h3>
+								<h3 className='block ui brown header'>{category.toUpperCase()}</h3>
 								<p>{description}</p>
-								<div className='ui vertical animated button' tabIndex='0'>
-									<div className='hidden content'>
-										<i className='shop icon'></i>
-									</div>
-									<div className='visible content'>Add to Cart</div>
-								</div>
 							</div>
 						</div>
 					</div>
