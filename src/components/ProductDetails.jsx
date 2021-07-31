@@ -1,20 +1,13 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { removeSelectedProduct, fetchProduct } from '../redux/actions/productActions';
+import useFetchProductDetail from '../hooks/useFetchProductDetail';
 
 const ProductDetails = () => {
 	const product = useSelector((state) => state.product);
 	const { image, title, price, category, description } = product;
 	const { productId } = useParams();
-	const dispatch = useDispatch();
 
-	useEffect(() => {
-		if (productId && productId !== '') dispatch(fetchProduct(productId));
-		return () => {
-			dispatch(removeSelectedProduct());
-		};
-	}, [dispatch, productId]);
+	useFetchProductDetail(productId);
 
 	return (
 		<div className='container grid ui' style={{ marginTop: '2rem' }}>
